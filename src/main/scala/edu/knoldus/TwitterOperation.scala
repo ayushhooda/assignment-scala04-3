@@ -12,10 +12,12 @@ import scala.concurrent.Future
 
 class TwitterOperation {
 
+  val count = 50
+
   /**
-    * @param consumerKey - Twitter account's consumerKey
-    * @param consumerSecret - Twitter account's consumerSecret
-    * @param accessToken - Twitter account's accessToken
+    * @param consumerKey       - Twitter account's consumerKey
+    * @param consumerSecret    - Twitter account's consumerSecret
+    * @param accessToken       - Twitter account's accessToken
     * @param accessTokenSecret - Twitter account's accessTokenSecret
     * @return twitter account instance
     */
@@ -36,7 +38,7 @@ class TwitterOperation {
     * @return list of tweets for provided HashTag
     */
   def getTweetsForHashTag(hashTag: String, twitter: Twitter): Future[List[twitter4j.Status]] = Future {
-    twitter.search(new Query(hashTag)).getTweets.asScala.toList
+    twitter.search(new Query(hashTag).count(count)).getTweets.asScala.toList
   }
 
   /**
@@ -46,36 +48,26 @@ class TwitterOperation {
     * @return number of tweets for provided HashTag
     */
   def getNumberOfTweetsForHashTag(hashTag: String, twitter: Twitter): Future[Int] = Future {
-    try {
-      twitter.search(new Query(hashTag)).getTweets.size()
-    }
-    catch {
-      case exception: Exception => throw exception
-    }
+    twitter.search(new Query(hashTag).count(count)).getTweets.size()
   }
 
   /**
-    * @param hashTag - HashTag for which tweets are to be retrieved
-    * @param twitter - Twitter account instance
+    * @param hashTag   - HashTag for which tweets are to be retrieved
+    * @param twitter   - Twitter account instance
     * @param startDate - Start date of duration for which average tweets are to be calculated
-    * @param endDate - End date of duration for which average tweets are to be calculated
+    * @param endDate   - End date of duration for which average tweets are to be calculated
     * @throws Exception when Twitter service or network is unavailable
     * @return Average tweets per day for provided HashTag and Duration
     */
   def getAverageTweetsPerDay(hashTag: String, twitter: Twitter, startDate: String, endDate: String): Future[Long] = Future {
-    try {
-      val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-      val oldDate = LocalDate.parse(startDate, formatter)
-      val newDate = LocalDate.parse(endDate, formatter)
-      val numberOfDays = newDate.toEpochDay() - oldDate.toEpochDay()
-      val query = new Query(hashTag)
-      query.setSince(startDate)
-      query.setUntil(endDate)
-      twitter.search(query).getTweets.size() / numberOfDays
-    }
-    catch {
-      case exception: Exception => throw exception
-    }
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val oldDate = LocalDate.parse(startDate, formatter)
+    val newDate = LocalDate.parse(endDate, formatter)
+    val numberOfDays = newDate.toEpochDay() - oldDate.toEpochDay()
+    val query = new Query(hashTag)
+    query.setSince(startDate)
+    query.setUntil(endDate)
+    twitter.search(query).getTweets.size() / numberOfDays
   }
 
   /**
@@ -84,15 +76,16 @@ class TwitterOperation {
     * @throws Exception when Twitter service or network is unavailable
     * @return Average number of ReTweets for provided HashTag
     */
-  def getReTweetCount(hashTag: String, twitter: Twitter): Future[Int] = Future {
-    try {
-      val query = new Query(hashTag)
-      val tweets = twitter.search(query).getTweets.asScala.toList
-      tweets.map(_.getRetweetCount).size / tweets.size
-    }
-    catch {
-      case exception: Exception => throw exception
-    }
+  def getReTweetCount(hashTag: String, twitter: Twitter, startDate: String, endDate: String): Future[Long] = Future {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val oldDate = LocalDate.parse(startDate, formatter)
+    val newDate = LocalDate.parse(endDate, formatter)
+    val numberOfDays = newDate.toEpochDay() - oldDate.toEpochDay()
+    val query = new Query(hashTag)
+    query.setSince(startDate)
+    query.setUntil(endDate)
+    val tweets = twitter.search(query).getTweets.asScala.toList
+    tweets.map(_.getRetweetCount).size / numberOfDays
   }
 
   /**
@@ -101,15 +94,16 @@ class TwitterOperation {
     * @throws Exception when Twitter service or network is unavailable
     * @return Average number of Likes for provided HashTag
     */
-  def getLikesCount(hashTag: String, twitter: Twitter): Future[Int] = Future {
-    try {
-      val query = new Query(hashTag)
-      val tweets = twitter.search(query).getTweets.asScala.toList
-      tweets.map(_.getFavoriteCount).size / tweets.size
-    }
-    catch {
-      case exception: Exception => throw exception
-    }
+  def getLikesCount(hashTag: String, twitter: Twitter, startDate: String, endDate: String): Future[Long] = Future {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val oldDate = LocalDate.parse(startDate, formatter)
+    val newDate = LocalDate.parse(endDate, formatter)
+    val numberOfDays = newDate.toEpochDay() - oldDate.toEpochDay()
+    val query = new Query(hashTag)
+    query.setSince(startDate)
+    query.setUntil(endDate)
+    val tweets = twitter.search(query).getTweets.asScala.toList
+    tweets.map(_.getFavoriteCount).size / numberOfDays
   }
 
 }

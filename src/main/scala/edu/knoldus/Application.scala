@@ -25,36 +25,36 @@ object Application extends App {
   val hashTag: String = "KheloIndia"
 
   val tweets = obj.getTweetsForHashTag(hashTag, twitter) onComplete {
-    case Success(value) => log.info(s"Fethed Tweets = $value \n\n\n")
-    case Failure(exception) => log.info(s"$exception \n\n\n")
+    case Success(value) => log.info(s"\n\nFethed Tweets = $value \n")
+    case Failure(exception) => log.info(s"\n\n$exception \n")
   }
   log.info("\n")
   log.info("\n")
 
   val tweetsCount = obj.getNumberOfTweetsForHashTag(hashTag, twitter) onComplete {
-    case Success(value) => log.info(s"Tweets Count = $value \n\n\n")
-    case Failure(exception) => log.info(s"$exception \n\n\n")
+    case Success(value) => log.info(s"\n\nTweets Count = $value ")
+    case Failure(exception) => log.info(s"\n\n$exception ")
   }
   log.info("\n")
   log.info("\n")
 
-  val averageTweetsPerDay = obj.getAverageTweetsPerDay(hashTag, twitter, "2018-01-30", "2018-02-04") onComplete {
-    case Success(value) => log.info(s"\nAverage tweets per day = $value \n\n\n")
-    case Failure(exception) => log.info(s"$exception \n\n\n")
+  val averageTweetsPerDay = obj.getAverageTweetsPerDay(hashTag, twitter, "2018-01-30", "2018-02-01") onComplete {
+    case Success(value) => log.info(s"\n\nAverage tweets per day = $value \n")
+    case Failure(exception) => log.info(s"\n\n$exception \n")
   }
   log.info("\n")
   log.info("\n")
 
-  val averageReTweet = obj.getReTweetCount(hashTag, twitter) onComplete {
-    case Success(value) => log.info(s"\nAverage ReTweets = $value \n\n\n")
-    case Failure(exception) => log.info(s"$exception \n\n\n")
+  val averageReTweet = obj.getReTweetCount(hashTag, twitter, "2018-01-30", "2018-02-02") onComplete {
+    case Success(value) => log.info(s"\n\nAverage ReTweets = $value \n")
+    case Failure(exception) => log.info(s"\n\n$exception \n")
   }
   log.info("\n")
   log.info("\n")
 
-  val averageLikes = obj.getLikesCount(hashTag, twitter) onComplete {
-    case Success(value) => log.info(s"\nAverage Likes = $value \n\n\n")
-    case Failure(exception) => log.info(s"$exception \n\n\n")
+  val averageLikes = obj.getLikesCount(hashTag, twitter, "2018-01-30", "2018-02-02") onComplete {
+    case Success(value) => log.info(s"\n\nAverage Likes = $value \n")
+    case Failure(exception) => log.info(s"\n\n$exception \n")
   }
   log.info("\n")
 
